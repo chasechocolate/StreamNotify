@@ -5,6 +5,9 @@ channels:
 - chasechocolate
 broadcast:
   delay: 120
-  broadcast-when-offline: false
-  message-online: '&aWe are currently livestreaming! Come check us out at: twitch.tv/%channel%!'
-  message-offline: '&cAll of our Twitch streams are currently offline :('
+  message-start: '&aWe are currently livestreaming! Currently Streaming:'
+  urlcolor: '&a'
+playercheck:
+  online: '%channel% is currently streaming at %url%'
+  offline: '%channel% is not streaming, check again later!'
+  notlisted: '%channel% is not part of out offical straming list, please try again'
