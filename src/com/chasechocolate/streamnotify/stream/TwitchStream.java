@@ -8,24 +8,27 @@ import java.net.URL;
 
 public class TwitchStream {
 	private String channel;
-	
+
 	private URL url;
 	private BufferedReader reader;
-	
+
 	private boolean online = false;
-	
-	public TwitchStream(String channel){
+
+	public TwitchStream(String channel) {
 		this.channel = channel;
-		
+
 		refresh();
 	}
-	
-	public void refresh(){
-		try {
-			this.url = new URL("http://api.justin.tv/api/stream/list.json?jsonp=&channel=" + channel);
-			this.reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
-			if(!(reader.readLine().equals("[]"))){
+	public void refresh() {
+		try {
+			this.url = new URL(
+					"http://api.justin.tv/api/stream/list.json?jsonp=&channel="
+							+ channel);
+			this.reader = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+
+			if (!(reader.readLine().equals("[]"))) {
 				online = true;
 			} else {
 				online = false;
@@ -36,12 +39,20 @@ public class TwitchStream {
 			e.printStackTrace();
 		}
 	}
-	
-	public URL getUrl(){
+
+	public URL getUrl() {
 		return this.url;
 	}
-	
-	public boolean isOnline(){
+
+	public String getDisplayUrl() {
+		return "http://twitch.tv/" + this.channel;
+	}
+
+	public boolean isOnline() {
 		return this.online;
+	}
+
+	public String getChannel() {
+		return this.channel;
 	}
 }
