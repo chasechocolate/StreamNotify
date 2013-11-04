@@ -23,7 +23,7 @@ channels:
 
 ###Broadcast
 ####Delay
-How long (in seconds) between each broadcast of online streamers.
+How long (in seconds) between each broadcast of online streamers. This is also the delay for the stream status refresh.
 
 ####Message Start
 What the broadcast starts with, before listing each online stream. Supports [Color Code]s.
