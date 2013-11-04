@@ -1,6 +1,5 @@
 package com.chasechocolate.streamnotify;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -12,7 +11,6 @@ import com.chasechocolate.streamnotify.cmds.StreamNotifyCommand;
 import com.chasechocolate.streamnotify.stream.TwitchStream;
 
 public class StreamNotify extends JavaPlugin {
-	public File configFile = new File(this.getDataFolder(), "config.yml");
 
 	public ArrayList<TwitchStream> streams;
 
@@ -22,11 +20,7 @@ public class StreamNotify extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if (!(configFile.exists())) {
-			log("Found no config.yml! Creating one for you...");
-			this.saveDefaultConfig();
-			log("Successfully created config.yml!");
-		}
+		this.saveDefaultConfig();
 
 		log("Loading channels...");
 
