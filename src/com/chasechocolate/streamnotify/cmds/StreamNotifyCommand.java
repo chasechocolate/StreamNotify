@@ -23,7 +23,7 @@ public class StreamNotifyCommand implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("streamnotify")) {
 			if (args.length > 0) {
 				for (TwitchStream stream : plugin.streams)
-					if (stream.getChannel().equalsIgnoreCase(args[1])) {
+					if (stream.getChannel().equalsIgnoreCase(args[0])) {
 						if (stream.isOnline()) {
 							String msg = plugin.getConfig().getString(
 									"playercheck.online");
@@ -33,7 +33,7 @@ public class StreamNotifyCommand implements CommandExecutor {
 								msg = msg.replace("%channel%",
 										stream.getChannel());
 							if (msg.contains("%url%"))
-								msg = msg.replace("%url%", stream.getChannel());
+								msg = msg.replace("%url%", stream.getDisplayUrl());
 							sender.sendMessage(msg);
 						} else {
 							String msg = plugin.getConfig().getString(
@@ -43,18 +43,18 @@ public class StreamNotifyCommand implements CommandExecutor {
 							if (msg.contains("%channel%"))
 								msg = msg.replace("%channel%",
 										stream.getChannel());
-							if (msg.contains("%url%"))
-								msg = msg.replace("%url%", stream.getChannel());
 							sender.sendMessage(msg);
 						}
-					} else {
-						String msg = plugin.getConfig().getString(
-								"playercheck.notlisted");
-						msg = ChatColor.translateAlternateColorCodes('&', msg);
-						if (msg.contains("%channel%"))
-							msg = msg.replace("%channel%", stream.getChannel());
-						sender.sendMessage(msg);
+						return true;
 					}
+
+				String msg = plugin.getConfig().getString(
+						"playercheck.notlisted");
+				msg = ChatColor.translateAlternateColorCodes('&', msg);
+				if (msg.contains("%channel%"))
+					msg = msg.replace("%channel%", args[0]);
+				sender.sendMessage(msg);
+
 			} else {
 				ArrayList<String> online = new ArrayList<String>();
 				for (TwitchStream stream : plugin.streams)
