@@ -69,7 +69,12 @@ public class StreamNotifyCommand implements CommandExecutor {
 					color = ChatColor.translateAlternateColorCodes('&', color);
 					sender.sendMessage(msg);
 					for (String url : online)
-						sender.sendMessage(" - " + url);
+						sender.sendMessage(color + " - " + url);
+				} else {
+					String msg = plugin.getConfig().getString(
+							"playercheck.alloffline");
+					msg = ChatColor.translateAlternateColorCodes('&', msg);
+					sender.sendMessage(msg);
 				}
 			}
 			return true;

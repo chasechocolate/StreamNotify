@@ -11,3 +11,4 @@ playercheck:
   online: '%channel% is currently streaming at %url%'
   offline: '%channel% is not streaming, check again later!'
   notlisted: '%channel% is not part of out offical straming list, please try again'
+  alloffline: '&aAll of our streams are offline.'
