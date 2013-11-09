@@ -1,9 +1,14 @@
 #Default configuration file for StreamNotify!
 #Configuration tutorial: http://dev.bukkit.org/server-mods/streamnotify/pages/configuration
 
-channel: chasechocolate
+channels:
+- chasechocolate
 broadcast:
   delay: 120
-  broadcast-when-offline: false
-  message-online: '&aWe are currently livestreaming! Come check us out at: twitch.tv/chasechocolate!'
-  message-offline: '&cOur Twitch stream is currently offline :('
+  message-start: '&aWe are currently livestreaming! Currently Streaming:'
+  urlcolor: '&a'
+playercheck:
+  online: '%channel% is currently streaming at %url%'
+  offline: '%channel% is not streaming, check again later!'
+  notlisted: '%channel% is not part of out offical straming list, please try again'
+  alloffline: '&aAll of our streams are offline.'

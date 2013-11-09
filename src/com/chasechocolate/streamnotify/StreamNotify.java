@@ -1,6 +1,6 @@
 package com.chasechocolate.streamnotify;
 
-import java.io.File;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,68 +11,59 @@ import com.chasechocolate.streamnotify.cmds.StreamNotifyCommand;
 import com.chasechocolate.streamnotify.stream.TwitchStream;
 
 public class StreamNotify extends JavaPlugin {
-	public File configFile = new File(this.getDataFolder(), "config.yml");
-	
-	public TwitchStream stream;
-	
-	public String channel;
-	public String messageOnline;
-	public String messageOffline;
-	
-	public boolean broadcastWhenOffline;
-	
-	public int broadcastDelay;
-	
-	public void log(String msg){
+
+	public ArrayList<TwitchStream> streams;
+
+	public void log(String msg) {
 		this.getLogger().info(msg);
 	}
-	
+
 	@Override
-	public void onEnable(){
-		if(!(configFile.exists())){
-			log("Found no config.yml! Creating one for you...");
-			this.saveDefaultConfig();
-			log("Successfully created config.yml!");
-		}
-		
-		log("Loading configuration options...");
-		loadConfig();
-		
-		this.stream = new TwitchStream(channel);
-		
-		log("Starting broadcast delay every " + broadcastDelay + " seconds...");
+	public void onEnable() {
+		this.saveDefaultConfig();
+
+		log("Loading channels...");
+
+		this.streams = new ArrayList<TwitchStream>();
+		for (String channel : this.getConfig().getStringList("channels"))
+			streams.add(new TwitchStream(channel));
+
+		log("Starting broadcast timer...");
 		startBroadcastTimer();
-		
-		this.getCommand("streamnotify").setExecutor(new StreamNotifyCommand(this));
-		
+
+		this.getCommand("streamnotify").setExecutor(
+				new StreamNotifyCommand(this));
+
 		log("Enabled!");
 	}
-	
+
 	@Override
-	public void onDisable(){
+	public void onDisable() {
 		log("Disabled!");
 	}
-	
-	public void loadConfig(){
-		this.channel = this.getConfig().getString("channel");
-		this.broadcastDelay = this.getConfig().getInt("broadcast.delay");
-		this.broadcastWhenOffline = this.getConfig().getBoolean("broadcast.broadcast-when-offline");
-		this.messageOnline = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("broadcast.message-online"));
-		this.messageOffline = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("broadcast.message-offline"));
-	}
-	
-	public void startBroadcastTimer(){
-		new BukkitRunnable(){
+
+	public void startBroadcastTimer() {
+		int delay = getConfig().getInt("broadcast.delay");
+		new BukkitRunnable() {
 			@Override
-			public void run(){
-				if(stream.isOnline()){
-					Bukkit.broadcastMessage(messageOnline);
-				} else {
-					if(broadcastWhenOffline){
-						Bukkit.broadcastMessage(messageOffline);
-					}
+			public void run() {
+				ArrayList<String> online = new ArrayList<String>();
+				for (TwitchStream stream : streams) {
+					stream.refresh();
+					if (stream.isOnline())
+						online.add(stream.getDisplayUrl());
+				}
+				if (!online.isEmpty()) {
+					String msg = getConfig().getString(
+							"broadcast.message-start");
+					msg = ChatColor.translateAlternateColorCodes('&', msg);
+					String color = getConfig().getString("broadcast.urlcolor");
+					color = ChatColor.translateAlternateColorCodes('&', color);
+					Bukkit.broadcastMessage(msg);
+					for (String url : online)
+						Bukkit.broadcastMessage(color + " - " + url);
 				}
 			}
-		}.runTaskTimer(this, broadcastDelay * 20, broadcastDelay * 20);
+		}.runTaskTimer(this, delay * 20, delay * 20);
 	}
 }

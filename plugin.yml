@@ -3,5 +3,5 @@ main: com.chasechocolate.streamnotify.StreamNotify
 version: 05.04.13
 commands:
   streamnotify:
-    usage: /streamnotify
+    usage: /streamnotify [channel]
     description: Notify the user if the Twitch stream is online.
