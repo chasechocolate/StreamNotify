@@ -30,6 +30,7 @@ public class StreamNotify extends JavaPlugin {
 
 		log("Starting broadcast timer...");
 		startBroadcastTimer();
+		startRefreshTimer();
 
 		this.getCommand("streamnotify").setExecutor(
 				new StreamNotifyCommand(this));
@@ -49,7 +50,6 @@ public class StreamNotify extends JavaPlugin {
 			public void run() {
 				ArrayList<String> online = new ArrayList<String>();
 				for (TwitchStream stream : streams) {
-					stream.refresh();
 					if (stream.isOnline())
 						online.add(stream.getDisplayUrl());
 				}
@@ -65,5 +65,17 @@ public class StreamNotify extends JavaPlugin {
 				}
 			}
 		}.runTaskTimer(this, delay * 20, delay * 20);
+	}
+
+	public void startRefreshTimer() {
+		int delay = getConfig().getInt("broadcast.delay");
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for (TwitchStream stream : streams) {
+					stream.refresh();
+				}
+			}
+		}.runTaskTimerAsynchronously(this, (delay/2) * 20, delay * 20);
 	}
 }
